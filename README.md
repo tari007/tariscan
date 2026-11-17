@@ -89,3 +89,20 @@ This repository is the web application rebuild of TariScan POS. The earlier Andr
 ## License
 
 A project license has not yet been selected. All rights remain with the project owner unless a license is added.
+
+
+## Build 3: Offline data foundation
+
+Build 3 adds a Dexie/IndexedDB local database for products, sales and a per-business synchronisation queue. Local repository functions save records to IndexedDB first. The sync worker verifies the signed-in owner and business before sending queued product and sale records to Supabase. Failed items remain in the queue and can be retried when connectivity returns. The dashboard shows connection and pending-sync status.
+
+### Activate the cloud schema
+
+Run `supabase/migrations/202611170002_offline_sync_tables.sql` in the Supabase SQL Editor after the Build 2 business migration.
+
+### Current scope and limitations
+
+- Product and sale records can be written through the local repository functions in `src/lib/offline/repository.ts`.
+- Synchronisation is attempted when the app is opened, when the browser reports that it is online, and periodically while the app is open.
+- iOS may suspend background work. Do not rely on background sync while Safari is closed.
+- The dashboard is not yet a live inventory or checkout screen. Build 4 will connect the product-management interface to the local repository.
+- This is an initial sync foundation. Multi-device conflict resolution, stock ledger reconciliation, and production-grade retry/backoff are future hardening tasks.
