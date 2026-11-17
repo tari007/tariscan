@@ -46,9 +46,7 @@ export function useOfflineStatus(businessId?: string) {
     const interval = window.setInterval(() => {
       void refreshCount();
       if (navigator.onLine) void syncNow();
-    }, 30000);
-    const onDbChange = () => void refreshCount();
-    localDb.on("changes", onDbChange);
+    }, 5000);
 
     if (navigator.onLine) void syncNow();
 
@@ -56,7 +54,6 @@ export function useOfflineStatus(businessId?: string) {
       window.removeEventListener("online", updateOnline);
       window.removeEventListener("offline", updateOnline);
       window.clearInterval(interval);
-      localDb.on("changes").unsubscribe(onDbChange);
     };
   }, [refreshCount, syncNow]);
 
