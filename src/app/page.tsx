@@ -162,7 +162,7 @@ function Sidebar() {
       <div className="sidebar-bottom">
         <div className="offline-indicator">
           <span className="status-dot" />
-          <span>Offline-ready architecture</span>
+          <span>Offline support in development</span>
         </div>
       </div>
     </aside>
