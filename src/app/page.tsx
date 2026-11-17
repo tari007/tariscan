@@ -1,5 +1,6 @@
 "use client";
 
+import { OfflineSyncStatus } from "@/components/offline-sync-status";
 import {
   Activity,
   AlertTriangle,
@@ -160,10 +161,7 @@ function Sidebar() {
       })}
 
       <div className="sidebar-bottom">
-        <div className="offline-indicator">
-          <span className="status-dot" />
-          <span>Offline support in development</span>
-        </div>
+        <OfflineSyncStatus />
       </div>
     </aside>
   );
