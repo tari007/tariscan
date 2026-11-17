@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { isSupabaseConfigured, createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -26,7 +25,7 @@ export default function LoginPage() {
       const supabase = createClient();
       const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
       if (authError) throw authError;
-      const destination = searchParams.get("next");
+      const destination = new URLSearchParams(window.location.search).get("next");
       const { data: { user } } = await supabase.auth.getUser();
       const { data: businesses, error: businessError } = await supabase
         .from("businesses").select("id").eq("owner_id", user?.id ?? "").limit(1);
