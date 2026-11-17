@@ -27,7 +27,14 @@ export default function LoginPage() {
       const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
       if (authError) throw authError;
       const destination = searchParams.get("next");
-      router.replace(destination && destination.startsWith("/") ? destination : "/setup");
+      const { data: { user } } = await supabase.auth.getUser();
+      const { data: businesses, error: businessError } = await supabase
+        .from("businesses").select("id").eq("owner_id", user?.id ?? "").limit(1);
+      if (businessError) throw businessError;
+      const nextPath = destination && destination.startsWith("/")
+        ? destination
+        : businesses && businesses.length > 0 ? "/" : "/setup";
+      router.replace(nextPath);
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unable to sign in. Please try again.");
