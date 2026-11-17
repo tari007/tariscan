@@ -41,7 +41,7 @@ async function runSync(businessId: string): Promise<SyncResult> {
 
   const queue = await localDb.syncQueue
     .where("[business_id+status]")
-    .equals([businessId, "pending"])
+    .anyOf([[businessId, "pending"], [businessId, "failed"]])
     .sortBy("created_at");
 
   let synced = 0;
