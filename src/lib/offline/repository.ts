@@ -54,7 +54,7 @@ export async function recordLocalSale(
       record_id: sale.id,
       business_id: sale.business_id,
       operation: "upsert",
-      payload: sale,
+      payload: { ...sale },
       status: "pending",
       attempts: 0,
       created_at: now
