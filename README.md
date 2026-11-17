@@ -4,7 +4,7 @@
 
 The project is being built as a responsive web application that can be installed on supported devices. The planned architecture uses Next.js, TypeScript, Tailwind CSS, Supabase and browser-based local storage for offline workflows.
 
-> **Development status:** The current dashboard is an interface preview populated with sample figures and transactions. It is not connected to a live business database. Authentication, inventory persistence, checkout, synchronisation and production offline support are still under development.
+> **Development status:** Build 2 adds Supabase email/password authentication screens, owner onboarding, a business profile table with row-level security, and session-aware route protection. The dashboard still displays sample figures. Live inventory, checkout, synchronisation and production offline support are not yet implemented.
 
 ## Current technology
 
@@ -13,6 +13,17 @@ The project is being built as a responsive web application that can be installed
 - TypeScript
 - Tailwind CSS 4
 - Lucide icons
+
+## Supabase setup (Build 2)
+
+1. Create a Supabase project.
+2. In Project Settings, copy the project URL and publishable/anon key.
+3. Add them as `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in a local `.env.local` file and in the Vercel project environment settings.
+4. Open the Supabase SQL Editor and run `supabase/migrations/202611170001_initial_business_setup.sql`.
+5. In Supabase Authentication settings, configure the allowed site URL and redirect URLs for your local and deployed app domains.
+6. Redeploy the app after adding environment variables.
+
+Never put a Supabase service-role key in a `NEXT_PUBLIC_` variable or browser code. The application uses the publishable/anon key with row-level security.
 
 ## Run locally
 
