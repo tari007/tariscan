@@ -19,7 +19,7 @@ export default function BusinessSetupPage() {
   useEffect(() => {
     if (!configured) return;
     const supabase = createClient();
-    supabase.auth.getUser().then(({data}) => setEmail(data.user?.email ?? ""));
+    supabase.auth.getUser().then((result) => setEmail(result.data.user?.email ?? ""));
   }, [configured]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
