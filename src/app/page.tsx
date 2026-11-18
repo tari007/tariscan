@@ -435,26 +435,10 @@ function StockAlerts() {
 
 function QuickActions() {
   const actions = [
-    {
-      title: "New Sale",
-      note: "Start a transaction",
-      icon: ShoppingCart
-    },
-    {
-      title: "Add Product",
-      note: "Register an item",
-      icon: Plus
-    },
-    {
-      title: "Scan Barcode",
-      note: "Identify a product",
-      icon: ScanBarcode
-    },
-    {
-      title: "View Reports",
-      note: "Analyse performance",
-      icon: ClipboardList
-    }
+    { title: "New Sale", note: "Start a transaction", icon: ShoppingCart, href: "/checkout" },
+    { title: "Add Product", note: "Register an item", icon: Plus, href: "/products" },
+    { title: "Scan Barcode", note: "Identify a product", icon: ScanBarcode, href: "/products" },
+    { title: "View Reports", note: "Analyse performance", icon: ClipboardList, href: "/" }
   ];
 
   return (
@@ -462,30 +446,20 @@ function QuickActions() {
       <div className="panel-heading">
         <div>
           <div className="panel-title">Quick Actions</div>
-          <div className="panel-description">
-            Common business operations
-          </div>
+          <div className="panel-description">Common business operations</div>
         </div>
       </div>
-
       <div className="quick-actions">
         {actions.map((action) => {
           const Icon = action.icon;
-
           return (
-            <Link href={action.href ?? "/"} className="quick-action" key={action.title}>
-              <div className="quick-action-icon">
-                <Icon />
-              </div>
+            <Link href={action.href} className="quick-action" key={action.title}>
+              <div className="quick-action-icon"><Icon /></div>
               <div>
-                <div className="quick-action-title">
-                  {action.title}
-                </div>
-                <div className="quick-action-note">
-                  {action.note}
-                </div>
+                <div className="quick-action-title">{action.title}</div>
+                <div className="quick-action-note">{action.note}</div>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
