@@ -135,6 +135,7 @@ function Sidebar() {
       {navigation.map((item) => {
         const Icon = item.icon;
 
+        if (item.label === "Point of Sale") { return <Link key={item.label} href="/checkout" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Products & Inventory") {
           return <Link key={item.label} href="/products" className="nav-item"><Icon /><span>{item.label}</span></Link>;
         }
@@ -472,7 +473,7 @@ function QuickActions() {
           const Icon = action.icon;
 
           return (
-            <div className="quick-action" key={action.title}>
+            <Link href={action.href ?? "/"} className="quick-action" key={action.title}>
               <div className="quick-action-icon">
                 <Icon />
               </div>
@@ -506,6 +507,7 @@ function MobileNavigation() {
       {items.map((item) => {
         const Icon = item.icon;
 
+        if (item.label === "Sell") { return <Link key={item.label} href="/checkout" className="mobile-nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Products") {
           return <Link key={item.label} href="/products" className="mobile-nav-item"><Icon /><span>{item.label}</span></Link>;
         }
