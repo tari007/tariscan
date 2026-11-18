@@ -38,15 +38,19 @@ export default function BusinessSetupPage() {
       const supabase = createClient();
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError || !user) throw new Error("Your session has expired. Sign in again.");
-      const { error: saveError } = await supabase.from("businesses").insert({
+      const { data: savedBusiness, error: saveError } = await supabase.from("businesses").insert({
         owner_id: user.id,
         name: businessName.trim(),
         business_type: businessType,
         phone: phone.trim() || null,
         country,
         currency
-      });
+      }).select("id,name").single();
       if (saveError) throw saveError;
+      if (savedBusiness?.id) {
+        localStorage.setItem("tariscan_business_id", savedBusiness.id);
+        localStorage.setItem("tariscan_business_name", savedBusiness.name);
+      }
       router.replace("/");
       router.refresh();
     } catch (err) {
