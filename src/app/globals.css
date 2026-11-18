@@ -1050,3 +1050,32 @@ a {
 @media(max-width:800px){.sales-page{padding:22px 15px 95px}.sales-header{flex-direction:column}.sales-filters{grid-template-columns:1fr 1fr}.sales-filters input:first-child{grid-column:1/-1}.sales-summary{gap:8px}.sales-summary-card{padding:12px}.sales-summary-card strong{font-size:16px}}
 @media(max-width:430px){.sales-filters{grid-template-columns:1fr}.sales-filters input:first-child{grid-column:auto}.sales-summary{grid-template-columns:1fr 1fr}.sales-summary-card:last-child{grid-column:1/-1}}
 @media print{body *{visibility:hidden!important}.sales-receipt,.sales-receipt *{visibility:visible!important}.sales-receipt{display:block!important;position:absolute;inset:0;background:#fff;width:100%}.receipt-paper{margin:0 auto;padding:12px}}
+
+
+/* Build 8: customers, suppliers and purchasing */
+.crm-page{max-width:1440px;margin:0 auto;padding:28px 35px 55px}
+.crm-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+.crm-header h1{font-size:27px;letter-spacing:-.7px;margin:5px 0}
+.crm-count{font-size:12px;color:var(--muted);background:#fff;border:1px solid var(--border);padding:10px 13px;border-radius:9px}
+.crm-form,.crm-detail{background:#fff;border:1px solid var(--border);border-radius:13px;padding:20px;margin:18px 0}
+.crm-form h2,.crm-detail h2{font-size:16px;margin:0 0 16px}
+.crm-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.crm-form-grid label{display:flex;flex-direction:column;gap:7px;font-size:11px;font-weight:700;color:#536078}
+.crm-form-grid label.wide{grid-column:1/-1}
+.crm-form-grid input,.crm-form-grid select,.crm-form-grid textarea,.crm-toolbar input{width:100%;border:1px solid var(--border);border-radius:8px;padding:11px 12px;background:#fff;color:var(--foreground);font:inherit;font-size:13px;min-width:0}
+.crm-form-grid textarea{min-height:75px;resize:vertical}
+.crm-actions{display:flex;gap:9px;margin-top:16px}
+.crm-secondary{border:1px solid var(--border);background:#fff;border-radius:8px;padding:10px 14px;color:#536078;font-size:12px}
+.crm-toolbar{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:7px 12px;margin:18px 0}
+.crm-toolbar input{border:0;outline:0}
+.crm-list{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.crm-row{display:flex;align-items:center;gap:13px;width:100%;padding:15px 17px;border:0;border-bottom:1px solid var(--border);background:#fff;text-align:left;color:var(--foreground)}
+.crm-row:last-child{border-bottom:0}.crm-row.selected,.crm-row:hover{background:#f7f9ff}
+.crm-avatar{width:38px;height:38px;flex-shrink:0;border-radius:11px;background:#edf1ff;color:var(--primary);display:grid;place-items:center}
+.crm-main{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}.crm-main strong{font-size:13px}.crm-main small,.crm-metric small{font-size:10px;color:var(--muted);overflow-wrap:anywhere}
+.crm-metric{display:flex;flex-direction:column;align-items:flex-end;gap:4px}.crm-metric strong{font-size:12px;color:#b45b24}
+.crm-detail-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.crm-detail-head h2{margin:0 0 5px}.crm-detail-head p{font-size:11px;color:var(--muted);margin:0 0 14px}
+.crm-balance{display:flex;justify-content:space-between;gap:10px;padding:14px;background:#f5f7ff;border-radius:9px;font-size:12px;margin:12px 0 20px}.crm-balance strong{color:#b45b24}
+.crm-detail h3{font-size:13px}.crm-history{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid var(--border);font-size:12px}.crm-history span{display:flex;flex-direction:column;gap:4px}.crm-history small{font-size:10px;color:var(--muted)}
+.purchase-total{display:flex;justify-content:space-between;gap:10px;padding:14px 0;font-size:12px}.purchase-total span{color:var(--muted)}.purchase-total strong{font-size:16px}
+@media(max-width:760px){.crm-page{padding:20px 15px 90px}.crm-header{align-items:flex-start}.crm-header h1{font-size:23px}.crm-form,.crm-detail{padding:15px}.crm-form-grid{grid-template-columns:1fr}.crm-form-grid label.wide{grid-column:auto}.crm-row{padding:13px 11px}.crm-metric strong{font-size:11px}}
