@@ -1108,3 +1108,22 @@ a {
 .finance-note{font-size:11px;color:var(--muted);line-height:1.6;margin:12px 0}
 @media(max-width:850px){.finance-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.finance-page{padding:20px 15px 90px}.finance-header{align-items:flex-start}.finance-header h1{font-size:23px}.finance-cards{gap:9px}.finance-card{padding:13px}.finance-card strong{font-size:16px}.expense-form-grid{grid-template-columns:1fr}}
+
+/* Staff management */
+.staff-tabs{display:flex;gap:8px;margin:0 0 18px}
+.staff-tabs button{display:flex;align-items:center;gap:7px;border:1px solid var(--border);background:#fff;color:#667087;border-radius:8px;padding:10px 14px;font-size:12px;font-weight:700}
+.staff-tabs button.active{background:#eaf0ff;border-color:#cbd8ff;color:var(--primary)}
+.staff-layout{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.staff-members{grid-column:1/-1}
+.staff-role{display:flex;flex-direction:column;gap:4px;padding:12px 0;border-bottom:1px solid var(--border);font-size:12px}
+.staff-role:last-child{border-bottom:0}
+.staff-role span,.staff-member-info span{font-size:10px;color:var(--muted);text-transform:capitalize}
+.staff-member{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--border)}
+.staff-member:last-child{border-bottom:0}
+.staff-member-info{display:flex;flex:1;min-width:0;flex-direction:column;gap:5px;font-size:12px}
+.staff-controls{display:flex;gap:7px;align-items:center}
+.staff-controls select{max-width:135px;border:1px solid var(--border);border-radius:7px;padding:8px;font-size:10px;background:#fff}
+.staff-toggle{border:1px solid var(--border);background:#fff;border-radius:7px;padding:8px 10px;font-size:10px;color:var(--danger)}
+.staff-success{padding:10px 12px;border-radius:8px;background:#e8f7ef;color:#16764f;font-size:12px}
+.empty-state{color:var(--muted);font-size:12px;padding:16px 0}
+@media(max-width:760px){.staff-layout{grid-template-columns:1fr}.staff-members{grid-column:auto}.staff-member{align-items:flex-start;flex-wrap:wrap}.staff-controls{width:100%;padding-left:47px}.staff-controls select{flex:1;max-width:none}}
