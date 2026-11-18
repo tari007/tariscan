@@ -6,20 +6,23 @@ function makeId() {
 }
 
 export async function saveLocalProduct(
-  input: Omit<LocalProduct, "id" | "created_at" | "updated_at" | "sync_state">
-    & { id?: string }
+  input: Omit<LocalProduct, "id" | "created_at" | "updated_at" | "sync_state"> & { id?: string }
 ) {
   const now = new Date().toISOString();
+  const existing = input.id ? await localDb.products.get(input.id) : undefined;
   const product: LocalProduct = {
     ...input,
     id: input.id ?? makeId(),
-    created_at: now,
+    created_at: existing?.created_at ?? now,
     updated_at: now,
     sync_state: "pending"
   };
 
   await localDb.transaction("rw", localDb.products, localDb.syncQueue, async () => {
     await localDb.products.put(product);
+    const oldQueueItems = await localDb.syncQueue
+      .where("record_id").equals(product.id).toArray();
+    await localDb.syncQueue.bulkDelete(oldQueueItems.map(item => item.id).filter((id): id is number => id !== undefined));
     const queueItem: SyncQueueItem = {
       entity: "products",
       record_id: product.id,
@@ -32,7 +35,6 @@ export async function saveLocalProduct(
     };
     await localDb.syncQueue.add(queueItem);
   });
-
   return product;
 }
 
@@ -60,7 +62,6 @@ export async function recordLocalSale(
       created_at: now
     });
   });
-
   return sale;
 }
 
