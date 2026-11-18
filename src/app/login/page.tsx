@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { isSupabaseConfigured, createClient } from "@/lib/supabase/client";
+import { getSafeInternalPath } from "@/lib/security/redirect.mjs";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,9 +31,8 @@ export default function LoginPage() {
       const { data: businesses, error: businessError } = await supabase
         .from("businesses").select("id").eq("owner_id", user?.id ?? "").limit(1);
       if (businessError) throw businessError;
-      const nextPath = destination && destination.startsWith("/")
-        ? destination
-        : businesses && businesses.length > 0 ? "/" : "/setup";
+      const defaultPath = businesses && businesses.length > 0 ? "/" : "/setup";
+      const nextPath = getSafeInternalPath(destination, defaultPath);
       router.replace(nextPath);
       router.refresh();
     } catch (err) {
