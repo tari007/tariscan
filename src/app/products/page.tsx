@@ -45,6 +45,7 @@ export default function ProductsPage() {
     async function initialise() {
       try {
         let id = localStorage.getItem("tariscan_business_id") ?? "";
+        setBusinessName(localStorage.getItem("tariscan_business_name") ?? "Your business");
         if (isSupabaseConfigured() && navigator.onLine) {
           const supabase = createClient();
           const { data: { user } } = await supabase.auth.getUser();
