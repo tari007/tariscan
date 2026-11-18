@@ -87,7 +87,7 @@ export default function BackupPage() {
         !row.payload || typeof row.payload !== "object" ||
         (row.payload as Record<string, unknown>).business_id !== businessId ||
         (row.payload as Record<string, unknown>).id !== row.record_id ||
-        !Number.isFinite(row.attempts) || Number(row.attempts) < 0
+        typeof row.attempts !== "number" || !Number.isFinite(row.attempts) || row.attempts < 0
       )) {
         throw new Error("The backup sync queue is invalid or contains unsupported records.");
       }
