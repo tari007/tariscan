@@ -124,6 +124,7 @@ export default function CheckoutPage() {
           product_name: line.product.name,
           quantity: line.quantity,
           unit_price: line.product.unit_price,
+          cost_price: line.product.cost_price,
           line_total: Number((line.product.unit_price * line.quantity).toFixed(2))
         })),
         sold_at: now
