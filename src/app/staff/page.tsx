@@ -4,7 +4,7 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { Users, ShieldCheck, History, UserPlus, RefreshCw } from "lucide-react";
 
-type StaffRow = { id:string; user_id:string; role:string; is_active:boolean; created_at:string };
+type StaffRow = { member_id:string; user_id:string; email:string; role:string; is_active:boolean; created_at:string };
 type AuditRow = { id:string; action:string; entity_type:string; entity_id:string|null; created_at:string; actor_id:string|null };
 const roles = [
  {value:"manager",label:"Manager",description:"Business operations and staff oversight"},
@@ -53,7 +53,7 @@ export default function StaffPage(){
  }
  async function changeAccess(row:StaffRow,nextRole:string,active:boolean){
   setError("");setNotice("");
-  const {error:rpcError}=await createClient().rpc("update_business_member",{p_member_id:row.id,p_role:nextRole,p_is_active:active});
+  const {error:rpcError}=await createClient().rpc("update_business_member",{p_member_id:row.member_id,p_role:nextRole,p_is_active:active});
   if(rpcError){setError(rpcError.message);return;}
   setNotice("Staff access updated.");await load();
  }
@@ -73,7 +73,7 @@ export default function StaffPage(){
     {roles.map(r=><div className="staff-role" key={r.value}><strong>{r.label}</strong><span>{r.description}</span></div>)}
    </section>
    <section className="panel staff-members"><div className="panel-heading"><div><div className="panel-title">Business team</div><div className="panel-description">Manage active access and assigned roles</div></div></div>
-    {staff.length===0?<p className="empty-state">No staff memberships found. The owner membership is created by the database migration.</p>:staff.map(row=><div className="staff-member" key={row.id}><div className="avatar">{row.role.slice(0,2).toUpperCase()}</div><div className="staff-member-info"><strong>{row.user_id.slice(0,8)}</strong><span>{row.role.replace("_"," ")} · {row.is_active?"Active":"Disabled"}</span></div>{row.role!=="owner"&&<div className="staff-controls"><select aria-label="Staff role" value={row.role} onChange={e=>void changeAccess(row,e.target.value,row.is_active)}>{roles.map(r=><option key={r.value} value={r.value}>{r.label}</option>)}</select><button className="staff-toggle" onClick={()=>void changeAccess(row,row.role,!row.is_active)}>{row.is_active?"Disable":"Enable"}</button></div>}</div>)}
+    {staff.length===0?<p className="empty-state">No staff memberships found. The owner membership is created by the database migration.</p>:staff.map(row=><div className="staff-member" key={row.id}><div className="avatar">{row.role.slice(0,2).toUpperCase()}</div><div className="staff-member-info"><strong>{row.email}</strong><span>{row.role.replace("_"," ")} · {row.is_active?"Active":"Disabled"}</span></div>{row.role!=="owner"&&<div className="staff-controls"><select aria-label="Staff role" value={row.role} onChange={e=>void changeAccess(row,e.target.value,row.is_active)}>{roles.map(r=><option key={r.value} value={r.value}>{r.label}</option>)}</select><button className="staff-toggle" onClick={()=>void changeAccess(row,row.role,!row.is_active)}>{row.is_active?"Disable":"Enable"}</button></div>}</div>)}
    </section>
   </div>:<section className="panel"><div className="panel-heading"><div><div className="panel-title">Recent audit events</div><div className="panel-description">Latest 100 recorded events for this business</div></div></div>{logs.length===0?<p className="empty-state">No audit events have been recorded yet. Events will appear as audited operations are connected.</p>:<div className="table-wrap"><table className="data-table"><thead><tr><th>EVENT</th><th>RECORD</th><th>ACTOR</th><th>TIME</th></tr></thead><tbody>{logs.map(log=><tr key={log.id}><td>{log.action}</td><td>{log.entity_type}{log.entity_id?" · "+log.entity_id:""}</td><td>{log.actor_id?.slice(0,8)||"System"}</td><td>{new Date(log.created_at).toLocaleString()}</td></tr>)}</tbody></table></div>}</section>}
   <div className="demo-notice">Offline note: role information is enforced by Supabase when connected. Sensitive staff administration and cloud data access require an online authenticated session. Browser-cached roles are not tamper-proof offline security.</div>
