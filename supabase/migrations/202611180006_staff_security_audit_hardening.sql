@@ -26,7 +26,7 @@ begin
   case when tg_op='INSERT' then 'staff.member_added' else 'staff.member_updated' end,
   'business_member',coalesce(new.id,old.id)::text,
   jsonb_build_object('role',coalesce(new.role,old.role),'active',coalesce(new.is_active,old.is_active)));
- return coalesce(new,old);
+ if tg_op='DELETE' then return old; else return new; end if;
 end;
 $$;
 drop trigger if exists business_members_audit_trigger on public.business_members;
