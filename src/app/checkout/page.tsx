@@ -101,7 +101,7 @@ export default function CheckoutPage() {
     setError(""); setNotice("");
     if (!businessId) { setError("Business profile is not available."); return; }
     if (!cart.length) { setError("Add at least one product to the cart."); return; }
-    if (paymentMethod === "cash" && tenderedValue < total) || (paymentMethod === "credit" && tenderedValue > total) {
+    if ((paymentMethod === "cash" && tenderedValue < total) || (paymentMethod === "credit" && tenderedValue > total)) {
       setError("Amount received is less than the amount due."); return;
     }
     const now = new Date().toISOString();
