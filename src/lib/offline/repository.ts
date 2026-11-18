@@ -84,3 +84,11 @@ export async function receiveLocalPurchase(input:{business_id:string;supplier_id
     return purchase;
   });
 }
+
+export async function saveLocalExpense(input:{business_id:string;title:string;category:string;amount:number;payment_method:string;notes:string;spent_at?:string}){
+ if(!input.title.trim())throw new Error("Expense description is required.");
+ if(!Number.isFinite(input.amount)||input.amount<=0)throw new Error("Enter an amount greater than zero.");
+ const now=new Date().toISOString(),row={...input,id:makeId(),title:input.title.trim(),category:input.category.trim(),amount:Number(input.amount.toFixed(2)),notes:input.notes.trim(),spent_at:input.spent_at??now,created_at:now,sync_state:"pending" as const};
+ await localDb.transaction("rw",localDb.expenses,localDb.syncQueue,async()=>{await localDb.expenses.add(row);await localDb.syncQueue.add(queueRecord("expenses",row,{...row,sync_state:undefined},now));});
+ return row;
+}
