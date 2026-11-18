@@ -1127,3 +1127,24 @@ a {
 .staff-success{padding:10px 12px;border-radius:8px;background:#e8f7ef;color:#16764f;font-size:12px}
 .empty-state{color:var(--muted);font-size:12px;padding:16px 0}
 @media(max-width:760px){.staff-layout{grid-template-columns:1fr}.staff-members{grid-column:auto}.staff-member{align-items:flex-start;flex-wrap:wrap}.staff-controls{width:100%;padding-left:47px}.staff-controls select{flex:1;max-width:none}}
+
+
+/* Build 12: local backup and restore */
+.backup-page{max-width:900px;margin:0 auto;padding:30px 24px 60px}
+.backup-header{margin-bottom:24px}
+.backup-back{display:inline-flex;align-items:center;gap:7px;color:var(--primary);font-size:12px;font-weight:700;text-decoration:none;margin-bottom:25px}
+.backup-eyebrow{display:block;color:var(--primary);font-size:10px;font-weight:800;letter-spacing:1.4px}
+.backup-header h1{font-size:28px;letter-spacing:-.7px;margin:7px 0}
+.backup-header p,.backup-card p{color:var(--muted);font-size:12px;line-height:1.7}
+.backup-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:22px;margin:14px 0}
+.backup-icon{width:42px;height:42px;border-radius:11px;background:#eaf0ff;color:var(--primary);display:grid;place-items:center;margin-bottom:14px}
+.backup-card h2{font-size:16px;margin:0 0 6px}
+.backup-card button,.backup-file{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:8px;background:var(--primary);color:#fff;padding:11px 15px;font-size:12px;font-weight:700;cursor:pointer;margin-top:9px}
+.backup-card button:disabled,.backup-file:has(input:disabled){opacity:.55;cursor:not-allowed}
+.backup-file input{max-width:210px;font-size:11px}
+.backup-warning{display:flex;align-items:flex-start;gap:12px;padding:16px;border:1px solid #f0d9a5;background:#fffaf0;border-radius:12px;color:#8a5a0a;margin-top:18px}
+.backup-warning p{font-size:11px;line-height:1.6;margin:5px 0 0}
+.backup-message,.backup-error{padding:11px 13px;border-radius:8px;font-size:12px}
+.backup-message{background:#e8f7ef;color:#16764f}.backup-error{background:#fff0f0;color:#b42318}
+.backup-business{font-size:11px;color:var(--muted);margin-top:16px}
+@media(max-width:760px){.backup-page{padding:20px 15px 50px}.backup-header h1{font-size:24px}.backup-card{padding:17px}.backup-file{display:flex;flex-direction:column;align-items:flex-start}}
