@@ -55,6 +55,9 @@ async function runSync(businessId: string): Promise<SyncResult> {
         await localDb.syncQueue.delete(item.id!);
         if (item.entity === "products") await localDb.products.update(item.record_id, { sync_state: "synced" });
         if (item.entity === "sales") await localDb.sales.update(item.record_id, { sync_state: "synced" });
+        if (item.entity === "customers") await localDb.customers.update(item.record_id, { sync_state: "synced" });
+        if (item.entity === "suppliers") await localDb.suppliers.update(item.record_id, { sync_state: "synced" });
+        if (item.entity === "purchases") await localDb.purchases.update(item.record_id, { sync_state: "synced" });
       });
       synced += 1;
     } catch (error) {
