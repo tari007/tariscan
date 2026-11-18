@@ -1,3 +1,4 @@
+import { aggregateSaleQuantities, calculateRemainingStock } from "./stock.mjs";
 import { localDb, type LocalProduct, type LocalSale, type LocalCustomer, type LocalSupplier, type LocalPurchase, type SyncQueueItem, type SyncEntity } from "./database";
 
 function makeId() { return globalThis.crypto?.randomUUID?.() ?? `ts-${Date.now()}-${Math.random().toString(36).slice(2,10)}`; }
@@ -6,7 +7,7 @@ function queueRecord(entity: SyncEntity, record: {id:string;business_id:string},
 }
 async function replaceQueue(entity: SyncEntity, record: {id:string;business_id:string}, payload: Record<string,unknown>, now:string) {
   const old = await localDb.syncQueue.where("record_id").equals(record.id).toArray();
-  const ids = old.filter(q=>q.entity===entity && q.id!==undefined).map(q=>q.id as number);
+  const ids = old.filter(q=>q.entity===entity && q.business_id===record.business_id && q.id!==undefined).map(q=>q.id as number);
   if(ids.length) await localDb.syncQueue.bulkDelete(ids);
   await localDb.syncQueue.add(queueRecord(entity,record,payload,now));
 }
@@ -31,11 +32,15 @@ export async function completeLocalSale(input: Omit<LocalSale,"id"|"created_at"|
   const now=new Date().toISOString(),sale:LocalSale={...input,id:input.id??makeId(),created_at:now,sync_state:"pending"};
   await localDb.transaction("rw",localDb.products,localDb.sales,localDb.syncQueue,async()=>{
     const updates:LocalProduct[]=[];
-    for(const line of sale.items){
-      const product=await localDb.products.get(line.product_id);
-      if(!product||product.business_id!==sale.business_id||!product.is_active)throw new Error(`Product unavailable: ${line.product_name}`);
-      if(product.quantity<line.quantity)throw new Error(`Insufficient stock for ${product.name}. Available: ${product.quantity}`);
-      updates.push({...product,quantity:Number((product.quantity-line.quantity).toFixed(3)),updated_at:now,sync_state:"pending"});
+    const quantities=aggregateSaleQuantities(sale.items);
+    for(const [productId,soldQuantity] of quantities){
+      const product=await localDb.products.get(productId);
+      const saleLine=sale.items.find(line=>line.product_id===productId);
+      if(!product||product.business_id!==sale.business_id||!product.is_active)throw new Error(`Product unavailable: ${saleLine?.product_name??productId}`);
+      let remaining:number;
+      try { remaining=calculateRemainingStock(product.quantity,soldQuantity); }
+      catch { throw new Error(`Insufficient stock for ${product.name}. Available: ${product.quantity}`); }
+      updates.push({...product,quantity:remaining,updated_at:now,sync_state:"pending"});
     }
     await localDb.sales.add(sale);await localDb.syncQueue.add(queueRecord("sales",sale,{...sale},now));
     for(const product of updates){await localDb.products.put(product);await replaceQueue("products",product,{...product,sync_state:undefined},now);}
