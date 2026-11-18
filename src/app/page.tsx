@@ -136,6 +136,9 @@ function Sidebar() {
         const Icon = item.icon;
 
         if (item.label === "Point of Sale") { return <Link key={item.label} href="/checkout" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
+        if (item.label === "Customers") { return <Link key={item.label} href="/customers" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
+        if (item.label === "Suppliers") { return <Link key={item.label} href="/suppliers" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
+        if (item.label === "Purchases") { return <Link key={item.label} href="/purchases" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Sales & Transactions") { return <Link key={item.label} href="/sales" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Products & Inventory") {
           return <Link key={item.label} href="/products" className="nav-item"><Icon /><span>{item.label}</span></Link>;
@@ -483,6 +486,7 @@ function MobileNavigation() {
         const Icon = item.icon;
 
         if (item.label === "Sell") { return <Link key={item.label} href="/checkout" className="mobile-nav-item"><Icon /><span>{item.label}</span></Link>; }
+        if (item.label === "More") { return <Link key={item.label} href="/customers" className="mobile-nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Sales") { return <Link key={item.label} href="/sales" className="mobile-nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Products") {
           return <Link key={item.label} href="/products" className="mobile-nav-item"><Icon /><span>{item.label}</span></Link>;
