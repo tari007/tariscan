@@ -162,7 +162,9 @@ function Sidebar() {
 
       {management.map((item) => {
         const Icon = item.icon;
-
+        if (item.label === "Staff & Permissions") {
+          return <Link key={item.label} href="/staff" className="nav-item"><Icon /><span>{item.label}</span></Link>;
+        }
         return (
           <div key={item.label} className="nav-item disabled">
             <Icon />
