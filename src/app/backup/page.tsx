@@ -61,19 +61,35 @@ export default function BackupPage() {
     setBusy(true); setError(""); setMessage("");
     try {
       const parsed = JSON.parse(await file.text()) as Partial<BackupPayload>;
-      if (parsed.format !== "tariscan-local-backup" || parsed.version !== 1 || parsed.businessId !== businessId || !parsed.tables) {
+      if (parsed.format !== "tariscan-local-backup" || parsed.version !== 1 || parsed.businessId !== businessId || !parsed.tables || !Array.isArray(parsed.syncQueue) || typeof parsed.createdAt !== "string" || Number.isNaN(Date.parse(parsed.createdAt))) {
         throw new Error("This backup is invalid, unsupported, or belongs to a different business.");
       }
       for (const name of TABLES) {
         if (!Array.isArray(parsed.tables[name])) throw new Error(`Backup is missing the ${name} records.`);
         const rows = parsed.tables[name] as Array<Record<string, unknown>>;
-        if (rows.some(row => row.business_id !== businessId || typeof row.id !== "string")) {
-          throw new Error(`The ${name} section contains invalid business records.`);
+        const ids = new Set<string>();
+        if (rows.some(row => {
+          if (!row || typeof row !== "object" || row.business_id !== businessId || typeof row.id !== "string" || !row.id || ids.has(row.id)) return true;
+          ids.add(row.id);
+          return false;
+        })) {
+          throw new Error(`The ${name} section contains invalid or duplicate business records.`);
         }
       }
-      const queue = Array.isArray(parsed.syncQueue) ? parsed.syncQueue : [];
-      if (queue.some(row => row.business_id !== businessId || typeof row.record_id !== "string" || typeof row.entity !== "string")) {
-        throw new Error("The backup sync queue is invalid.");
+      const queue = parsed.syncQueue;
+      const allowedEntities = new Set<string>(TABLES);
+      if (queue.some(row =>
+        !row || typeof row !== "object" ||
+        row.business_id !== businessId ||
+        typeof row.record_id !== "string" || !row.record_id ||
+        typeof row.entity !== "string" || !allowedEntities.has(row.entity) ||
+        row.operation !== "upsert" ||
+        !row.payload || typeof row.payload !== "object" ||
+        (row.payload as Record<string, unknown>).business_id !== businessId ||
+        (row.payload as Record<string, unknown>).id !== row.record_id ||
+        !Number.isFinite(row.attempts) || Number(row.attempts) < 0
+      )) {
+        throw new Error("The backup sync queue is invalid or contains unsupported records.");
       }
       const confirmed = window.confirm("Restore this backup? It will replace this business's local records on this device. Export a fresh backup first if you need to preserve current data.");
       if (!confirmed) return;
