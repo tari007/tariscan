@@ -79,7 +79,7 @@ export default function SalesPage(){
   </section>
   <section className="sales-filters no-print">
    <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search receipt reference or customer"/>
-   <select value={payment} onChange={e=>setPayment(e.target.value)}><option value="all">All payment methods</option><option value="cash">Cash</option><option value="bank_transfer">Bank transfer</option><option value="card">Card</option></select>
+   <select value={payment} onChange={e=>setPayment(e.target.value)}><option value="all">All payment methods</option><option value="cash">Cash</option><option value="bank_transfer">Bank transfer</option><option value="card">Card</option><option value="credit">Customer credit</option></select>
    <select value={status} onChange={e=>setStatus(e.target.value)}><option value="all">All statuses</option><option value="completed">Completed</option><option value="refunded">Refunded</option></select>
    <div style={{display:"flex",gap:7}}><input type="date" aria-label="From date" value={from} onChange={e=>setFrom(e.target.value)}/><input type="date" aria-label="To date" value={to} onChange={e=>setTo(e.target.value)}/></div>
   </section>
