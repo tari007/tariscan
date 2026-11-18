@@ -15,7 +15,7 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["business", "productivity", "finance"],
     icons: [
       { src: "/icons/tariscan-192.svg", sizes: "192x192", type: "image/svg+xml", purpose: "any" },
-      { src: "/icons/tariscan-512.svg", sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+      { src: "/icons/tariscan-512.svg", sizes: "512x512", type: "image/svg+xml", purpose: "maskable" }
     ]
   };
 }
