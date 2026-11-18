@@ -104,7 +104,7 @@ npm start
 9. Expenses and reporting
 10. Staff membership and roles
 11. Role-aware cloud operations and audit controls
-12. PWA, backup, security hardening and deployment
+12. PWA, local backup, security hardening and deployment
 13. End-to-end testing and release preparation
 
 The earlier Android / Jetpack Compose application is a functional reference for the web rebuild. Its native source is not directly used by this Next.js application.
@@ -112,3 +112,14 @@ The earlier Android / Jetpack Compose application is a functional reference for 
 ## License
 
 A project license has not yet been selected. All rights remain with the project owner unless a license is added.
+
+
+## Build 12: PWA and local backup
+
+- The app includes a web app manifest and can be installed where the browser supports PWA installation.
+- The service worker caches only same-origin static assets and the generic offline fallback. It does not cache authenticated pages, Supabase requests, API responses or business records.
+- The offline fallback confirms that a page could not be loaded. It does not make every application route available offline. Previously loaded app code and IndexedDB-backed features still depend on browser cache availability.
+- The Backup and Restore screen is available at `/backup`. It exports the current business's local IndexedDB records and sync queue to a JSON file. Restore is restricted to a matching business ID and replaces that business's local records on the current device.
+- Backup files contain sensitive customer and business data. Store them securely. Restore does not upload all records to Supabase or download cloud records.
+- Sync retries when connectivity returns and when the app becomes visible. Mobile operating systems can suspend background work, so keep the app open during important synchronisation and verify the pending count reaches zero.
+- Baseline browser security headers are configured in Next.js. A restrictive Content Security Policy and server-side rate limiting require deployment-specific testing and are not claimed as implemented.
