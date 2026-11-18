@@ -18,6 +18,8 @@ jobs:
           node-version: 20
       - name: Install dependencies
         run: npm install
+      - name: Unit tests
+        run: npm test
       - name: Type check
         run: npx tsc --noEmit
       - name: Build application
