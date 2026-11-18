@@ -55,12 +55,24 @@ begin
   or new.change_due is distinct from old.change_due then
   raise exception 'Completed sale details cannot be edited';
  end if;
+ if (old.status='refunded' and (
+   new.status is distinct from old.status
+   or new.refunded_at is distinct from old.refunded_at
+   or new.refund_reason is distinct from old.refund_reason
+   or new.refunded_amount is distinct from old.refunded_amount)) then
+  raise exception 'A completed refund cannot be reversed or edited';
+ end if;
  if (new.status is distinct from old.status
   or new.refunded_at is distinct from old.refunded_at
   or new.refund_reason is distinct from old.refund_reason
   or new.refunded_amount is distinct from old.refunded_amount)
   and not public.has_business_permission(old.business_id,'sales.refund') then
   raise exception 'This role cannot refund sales';
+ end if;
+ if new.status='refunded' and (
+   new.refunded_at is null or coalesce(trim(new.refund_reason),'')=''
+   or new.refunded_amount is distinct from new.total) then
+  raise exception 'A valid full refund reason and amount are required';
  end if;
  return new;
 end;
