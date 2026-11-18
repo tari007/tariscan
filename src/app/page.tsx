@@ -139,6 +139,8 @@ function Sidebar() {
         if (item.label === "Customers") { return <Link key={item.label} href="/customers" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Suppliers") { return <Link key={item.label} href="/suppliers" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Purchases") { return <Link key={item.label} href="/purchases" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
+        if (item.label === "Expenses") { return <Link key={item.label} href="/expenses" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
+        if (item.label === "Reports & Analytics") { return <Link key={item.label} href="/reports" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Sales & Transactions") { return <Link key={item.label} href="/sales" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Products & Inventory") {
           return <Link key={item.label} href="/products" className="nav-item"><Icon /><span>{item.label}</span></Link>;
@@ -442,7 +444,9 @@ function QuickActions() {
     { title: "New Sale", note: "Start a transaction", icon: ShoppingCart, href: "/checkout" },
     { title: "Add Product", note: "Register an item", icon: Plus, href: "/products" },
     { title: "Scan Barcode", note: "Identify a product", icon: ScanBarcode, href: "/products" },
-    { title: "Sales History", note: "Find past transactions", icon: ClipboardList, href: "/sales" }
+    { title: "Sales History", note: "Find past transactions", icon: ClipboardList, href: "/sales" },
+    { title: "Record Expense", note: "Track operating costs", icon: Wallet, href: "/expenses" },
+    { title: "Business Reports", note: "Review financial performance", icon: BarChart3, href: "/reports" }
   ];
 
   return (
