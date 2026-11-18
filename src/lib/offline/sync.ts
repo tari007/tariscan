@@ -8,14 +8,16 @@ export interface SyncResult {
   message: string;
 }
 
-let activeSync: Promise<SyncResult> | null = null;
+const activeSyncs = new Map<string, Promise<SyncResult>>();
 
 export function syncPendingChanges(businessId: string): Promise<SyncResult> {
-  if (activeSync) return activeSync;
-  activeSync = runSync(businessId).finally(() => {
-    activeSync = null;
+  const existing = activeSyncs.get(businessId);
+  if (existing) return existing;
+  const task = runSync(businessId).finally(() => {
+    if (activeSyncs.get(businessId) === task) activeSyncs.delete(businessId);
   });
-  return activeSync;
+  activeSyncs.set(businessId, task);
+  return task;
 }
 
 async function runSync(businessId: string): Promise<SyncResult> {
