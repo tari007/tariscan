@@ -30,6 +30,8 @@ export interface LocalSale {
   tax: number;
   total: number;
   payment_method: string;
+  amount_tendered?: number;
+  change_due?: number;
   items: Array<{
     product_id: string;
     product_name: string;
