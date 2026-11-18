@@ -1,0 +1,17 @@
+"use client";
+import {useCallback,useEffect,useState} from "react";
+import Link from "next/link";
+import {ArrowLeft,Plus,Truck} from "lucide-react";
+import {localDb,type LocalSupplier} from "@/lib/offline/database";
+import {saveLocalSupplier} from "@/lib/offline/repository";
+export default function SuppliersPage(){
+ const [businessId,setBusinessId]=useState(""),[rows,setRows]=useState<LocalSupplier[]>([]),[show,setShow]=useState(false);
+ const [name,setName]=useState(""),[contact,setContact]=useState(""),[phone,setPhone]=useState(""),[email,setEmail]=useState(""),[address,setAddress]=useState(""),[notes,setNotes]=useState(""),[error,setError]=useState(""),[notice,setNotice]=useState("");
+ const refresh=useCallback(async(id:string)=>{const list=await localDb.suppliers.where("business_id").equals(id).toArray();list.sort((a,b)=>a.name.localeCompare(b.name));setRows(list);},[]);
+ useEffect(()=>{const id=localStorage.getItem("tariscan_business_id")||"";setBusinessId(id);if(id)void refresh(id);},[refresh]);
+ async function save(){setError("");setNotice("");if(!name.trim()){setError("Supplier name is required.");return;}try{await saveLocalSupplier({business_id:businessId,name:name.trim(),contact_person:contact.trim(),phone:phone.trim(),email:email.trim(),address:address.trim(),notes:notes.trim()});setName("");setContact("");setPhone("");setEmail("");setAddress("");setNotes("");setShow(false);await refresh(businessId);setNotice("Supplier saved locally and queued for synchronisation.");}catch(e){setError(e instanceof Error?e.message:"Could not save supplier.");}}
+ return <main className="crm-page"><header className="crm-header"><div><Link href="/" className="inventory-back"><ArrowLeft size={16}/> Dashboard</Link><p className="inventory-eyebrow">SUPPLIER MANAGEMENT</p><h1>Suppliers</h1><p className="inventory-subtitle">Maintain supplier contacts for stock replenishment</p></div><button className="checkout-primary" onClick={()=>setShow(v=>!v)}><Plus size={15}/> Add supplier</button></header>
+ {notice&&<p className="checkout-notice">{notice}</p>}{error&&<p className="checkout-error">{error}</p>}
+ {show&&<section className="crm-form"><h2>New supplier</h2><div className="crm-form-grid"><label>Supplier or company name *<input value={name} onChange={e=>setName(e.target.value)}/></label><label>Contact person<input value={contact} onChange={e=>setContact(e.target.value)}/></label><label>Phone<input value={phone} onChange={e=>setPhone(e.target.value)}/></label><label>Email<input type="email" value={email} onChange={e=>setEmail(e.target.value)}/></label><label>Address<input value={address} onChange={e=>setAddress(e.target.value)}/></label><label>Notes<input value={notes} onChange={e=>setNotes(e.target.value)}/></label></div><div className="crm-actions"><button className="checkout-primary" onClick={save}>Save supplier</button><button className="crm-secondary" onClick={()=>setShow(false)}>Cancel</button></div></section>}
+ <section className="crm-list">{rows.map(s=><div className="crm-row" key={s.id}><span className="crm-avatar"><Truck size={18}/></span><span className="crm-main"><strong>{s.name}</strong><small>{s.contact_person||"Supplier"} · {s.phone||s.email||"No contact details"}</small><small>{s.address}</small></span></div>)}{!rows.length&&<p className="checkout-muted">No suppliers saved yet. Add a supplier to start recording stock purchases.</p>}</section></main>;
+}
