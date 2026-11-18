@@ -91,6 +91,19 @@ async function pushItem(supabase: ReturnType<typeof createClient>, item: SyncQue
   const payload = { ...item.payload, business_id: item.business_id };
   delete (payload as Record<string, unknown>).sync_state;
 
+  if (table === "products") {
+    const { data: updated, error: updateError } = await supabase
+      .from("products")
+      .update(payload)
+      .eq("id", item.record_id)
+      .select("id");
+    if (updateError) throw updateError;
+    if (updated?.length) return;
+    const { error: insertError } = await supabase.from("products").insert(payload);
+    if (insertError) throw insertError;
+    return;
+  }
+
   const { error } = await supabase.from(table).upsert(payload, { onConflict: "id" });
   if (error) throw error;
 }
