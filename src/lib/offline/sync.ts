@@ -32,11 +32,16 @@ async function runSync(businessId: string): Promise<SyncResult> {
     return { synced: 0, failed: 0, pending: await countQueue(businessId), message: "Sign in to synchronise" };
   }
 
-  const { data: ownedBusiness, error: businessError } = await supabase
-    .from("businesses").select("id").eq("id", businessId).eq("owner_id", user.id).maybeSingle();
+  const { data: membership, error: membershipError } = await supabase
+    .from("business_members")
+    .select("id")
+    .eq("business_id", businessId)
+    .eq("user_id", user.id)
+    .eq("is_active", true)
+    .maybeSingle();
 
-  if (businessError || !ownedBusiness) {
-    return { synced: 0, failed: 0, pending: await countQueue(businessId), message: "Business access could not be verified" };
+  if (membershipError || !membership) {
+    return { synced: 0, failed: 0, pending: await countQueue(businessId), message: "This account does not have active access to this business" };
   }
 
   const queue = await localDb.syncQueue
