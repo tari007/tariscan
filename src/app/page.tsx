@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { OfflineSyncStatus } from "@/components/offline-sync-status";
-import { AlertTriangle } from "lucide-react";
 import {
   Activity,
   AlertTriangle,
