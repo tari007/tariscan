@@ -73,7 +73,7 @@ export default function CheckoutPage() {
   const subtotal = cart.reduce((sum, line) => sum + line.product.unit_price * line.quantity, 0);
   const discountValue = Math.min(subtotal, Math.max(0, Number(discount) || 0));
   const total = Math.max(0, subtotal - discountValue);
-  const tenderedValue = paymentMethod === "cash" ? Math.max(0, Number(tendered) || 0) : total;
+  const tenderedValue = paymentMethod === "cash" || paymentMethod === "credit" ? Math.max(0, Number(tendered) || 0) : total;
   const change = Math.max(0, tenderedValue - total);
 
   function addProduct(product: LocalProduct) {
@@ -101,7 +101,7 @@ export default function CheckoutPage() {
     setError(""); setNotice("");
     if (!businessId) { setError("Business profile is not available."); return; }
     if (!cart.length) { setError("Add at least one product to the cart."); return; }
-    if (paymentMethod === "cash" && tenderedValue < total) {
+    if (paymentMethod === "cash" && tenderedValue < total) || (paymentMethod === "credit" && tenderedValue > total) {
       setError("Amount received is less than the amount due."); return;
     }
     const now = new Date().toISOString();
@@ -195,20 +195,20 @@ export default function CheckoutPage() {
           <div className="checkout-fields">
             <label className="checkout-field full">Customer name<input value={customer} onChange={e=>setCustomer(e.target.value)} placeholder="Walk-in Customer"/></label>
             <label className="checkout-field">Discount (₦)<input type="number" min="0" max={subtotal} step="0.01" value={discount} onChange={e=>setDiscount(e.target.value)}/></label>
-            <label className="checkout-field">Payment method<select value={paymentMethod} onChange={e=>setPaymentMethod(e.target.value)}><option value="cash">Cash</option><option value="bank_transfer">Bank transfer (manual)</option><option value="card">Card (manual)</option></select></label>
-            {paymentMethod === "cash" && <label className="checkout-field full">Amount received (₦)<input type="number" min={total} step="0.01" value={tendered} onChange={e=>setTendered(e.target.value)} placeholder={total.toFixed(2)}/></label>}
+            <label className="checkout-field">Payment method<select value={paymentMethod} onChange={e=>setPaymentMethod(e.target.value)}><option value="cash">Cash</option><option value="bank_transfer">Bank transfer (manual)</option><option value="card">Card (manual)</option><option value="credit">Customer credit</option></select></label>
+            {(paymentMethod === "cash" || paymentMethod === "credit") && <label className="checkout-field full">{paymentMethod === "credit" ? "Amount paid now (₦)" : "Amount received (₦)"}<input type="number" min="0" max={total} step="0.01" value={tendered} onChange={e=>setTendered(e.target.value)} placeholder={paymentMethod === "cash" ? total.toFixed(2) : "0.00"}/></label>}
           </div>
 
           <div className="checkout-summary">
             <div className="checkout-total-row"><span>Subtotal</span><strong>{money(subtotal)}</strong></div>
             <div className="checkout-total-row"><span>Discount</span><strong>- {money(discountValue)}</strong></div>
             <div className="checkout-total-row checkout-grand-total"><span>Total due</span><strong>{money(total)}</strong></div>
-            {paymentMethod === "cash" && <div className="checkout-total-row"><span>Change</span><strong>{money(change)}</strong></div>}
+            {paymentMethod === "cash" && <div className="checkout-total-row"><span>Change</span><strong>{money(change)}</strong></div>}{paymentMethod === "credit" && <div className="checkout-total-row"><span>Outstanding balance</span><strong>{money(Math.max(0,total-tenderedValue))}</strong></div>}
           </div>
           <button type="button" className="checkout-pay-button" onClick={finishSale} disabled={saving || !cart.length || (paymentMethod === "cash" && tenderedValue < total)}>
             {saving ? "Completing sale…" : `Complete sale · ${money(total)}`}
           </button>
-          <p className="checkout-muted" style={{marginTop:10}}>Cash, bank transfer and card are recorded as payment methods. This prototype does not process payments through a bank or payment gateway.</p>
+          <p className="checkout-muted" style={{marginTop:10}}>Cash, bank transfer and card are recorded manually. Customer credit records any amount paid now and tracks the remaining balance. No bank or payment gateway is processed.</p>
         </section>
       </div>
 
