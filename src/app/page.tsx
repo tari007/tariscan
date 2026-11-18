@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { OfflineSyncStatus } from "@/components/offline-sync-status";
 import {
   Activity,
@@ -133,6 +134,10 @@ function Sidebar() {
 
       {navigation.map((item) => {
         const Icon = item.icon;
+
+        if (item.label === "Products & Inventory") {
+          return <Link key={item.label} href="/products" className="nav-item"><Icon /><span>{item.label}</span></Link>;
+        }
 
         return (
           <div
@@ -500,6 +505,10 @@ function MobileNavigation() {
     <nav className="mobile-bottom-nav">
       {items.map((item) => {
         const Icon = item.icon;
+
+        if (item.label === "Products") {
+          return <Link key={item.label} href="/products" className="mobile-nav-item"><Icon /><span>{item.label}</span></Link>;
+        }
 
         return (
           <div
