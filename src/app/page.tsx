@@ -448,7 +448,8 @@ function QuickActions() {
     { title: "Scan Barcode", note: "Identify a product", icon: ScanBarcode, href: "/products" },
     { title: "Sales History", note: "Find past transactions", icon: ClipboardList, href: "/sales" },
     { title: "Record Expense", note: "Track operating costs", icon: Wallet, href: "/expenses" },
-    { title: "Business Reports", note: "Review financial performance", icon: BarChart3, href: "/reports" }
+    { title: "Business Reports", note: "Review financial performance", icon: BarChart3, href: "/reports" },
+    { title: "Backup & Restore", note: "Protect local business records", icon: ShieldCheck, href: "/backup" }
   ];
 
   return (
