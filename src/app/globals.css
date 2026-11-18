@@ -1148,3 +1148,9 @@ a {
 .backup-message{background:#e8f7ef;color:#16764f}.backup-error{background:#fff0f0;color:#b42318}
 .backup-business{font-size:11px;color:var(--muted);margin-top:16px}
 @media(max-width:760px){.backup-page{padding:20px 15px 50px}.backup-header h1{font-size:24px}.backup-card{padding:17px}.backup-file{display:flex;flex-direction:column;align-items:flex-start}}
+
+
+/* Build 13: clarify dashboard sample data */
+.dashboard-demo-notice{display:flex;align-items:flex-start;gap:10px;margin:0 0 18px;padding:12px 14px;border:1px solid #f0d9a5;background:#fffaf0;color:#805b13;border-radius:10px;font-size:11px;line-height:1.6}
+.dashboard-demo-notice svg{flex:0 0 auto;margin-top:1px}
+.dashboard-demo-notice strong{font-weight:800}
