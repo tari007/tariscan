@@ -150,3 +150,15 @@ A project license has not yet been selected. All rights remain with the project 
 12. Review GitHub Actions and Vercel deployment logs before inviting real businesses.
 
 A green CI build does not verify live Supabase policies, authentication redirects, browser camera permissions, PWA installation on every device, or real multi-device conflict behaviour. These require environment-backed acceptance testing. Do not use production business records for initial testing.
+
+
+## Build 14: production configuration gate
+
+- Added a configuration-required screen for deployments that have missing, placeholder or malformed Supabase URL/key values.
+- Middleware now blocks application routes until valid public Supabase configuration is present, rather than allowing users into an application that cannot authenticate.
+- The configuration screen explains which public values belong in Vercel and warns against exposing the Supabase service-role key.
+- This gate validates configuration shape only. It does not prove that the Supabase project is reachable, that its migrations have run, or that authentication and RLS are working.
+
+### Production acceptance remains required
+
+Before real business use, complete the deployment checklist above against the actual Supabase and Vercel projects. Confirm authentication, all eleven migrations, owner and staff permissions, offline queue recovery, backup/restore and HTTPS camera access. The current GitHub CI workflow verifies unit tests, TypeScript and a Next.js production build. It does not run browser end-to-end tests or validate live cloud configuration.
