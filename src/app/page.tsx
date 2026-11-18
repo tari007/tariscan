@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { OfflineSyncStatus } from "@/components/offline-sync-status";
+import { AlertTriangle } from "lucide-react";
 import {
   Activity,
   AlertTriangle,
@@ -525,6 +526,7 @@ export default function DashboardPage() {
         <Topbar />
 
         <div className="dashboard-content">
+          <div className="dashboard-demo-notice"><AlertTriangle size={16} /><span><strong>Preview figures:</strong> The dashboard charts, sample transactions, stock alerts and headline totals below are illustrative placeholders. They are not live business records. Use the Products, Sales and Reports pages for records currently stored on this device.</span></div>
           <div className="welcome-row">
             <div>
               <div className="welcome-title">
