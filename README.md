@@ -123,3 +123,30 @@ A project license has not yet been selected. All rights remain with the project 
 - Backup files contain sensitive customer and business data. Store them securely. Restore does not upload all records to Supabase or download cloud records.
 - Sync retries when connectivity returns and when the app becomes visible. Mobile operating systems can suspend background work, so keep the app open during important synchronisation and verify the pending count reaches zero.
 - Baseline browser security headers are configured in Next.js. A restrictive Content Security Policy and server-side rate limiting require deployment-specific testing and are not claimed as implemented.
+
+
+## Build 13: testing and release preparation
+
+- Added Node's built-in test runner for sale quantity aggregation and stock calculation rules. Run with `npm test`.
+- Checkout now aggregates repeated cart lines by product before deducting stock. This prevents duplicate lines from deducting less stock than the customer purchased.
+- Sync queue replacement is scoped to both business ID and record ID.
+- Concurrent sync tasks are isolated per business so one business's active sync does not block another business.
+- Backup restore checks business ownership, table record IDs, supported queue entities, queue payload identity and retry metadata before replacing local data.
+- The dashboard now displays a notice that its charts, example transactions, stock alerts and headline totals are illustrative placeholders. They are not live records.
+
+### Deployment readiness checklist
+
+1. Configure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel.
+2. Run all eleven Supabase migrations in the order listed above.
+3. Set Supabase Authentication site URL and redirect allow-list for the production domain.
+4. Register the production domain in Vercel and deploy the `main` branch.
+5. Sign in as the business owner and verify business setup.
+6. Create a test product, record a sale, verify stock reduction, record a refund and verify stock restoration.
+7. Test camera scanning on HTTPS and grant camera permission.
+8. Test offline checkout, reconnect, and verify the sync queue reaches zero.
+9. Export a backup, restore it into a test business with the matching business ID, and verify records.
+10. Test staff accounts with separate browser sessions and verify denied operations are rejected by Supabase.
+11. Verify PWA installation and offline fallback on supported mobile browsers.
+12. Review GitHub Actions and Vercel deployment logs before inviting real businesses.
+
+A green CI build does not verify live Supabase policies, authentication redirects, browser camera permissions, PWA installation on every device, or real multi-device conflict behaviour. These require environment-backed acceptance testing. Do not use production business records for initial testing.
