@@ -11,15 +11,12 @@ export function useOfflineStatus(businessId?: string) {
   const [lastMessage, setLastMessage] = useState("Waiting for connection");
 
   const refreshCount = useCallback(async () => {
-    if (!businessId) {
-      setPending(0);
-      return;
-    }
-    const pendingCount = await localDb.syncQueue
+    if (!businessId) { setPending(0); return; }
+    const count = await localDb.syncQueue
       .where("[business_id+status]")
       .anyOf([[businessId, "pending"], [businessId, "failed"]])
       .count();
-    setPending(pendingCount);
+    setPending(count);
   }, [businessId]);
 
   const syncNow = useCallback(async () => {
@@ -29,31 +26,37 @@ export function useOfflineStatus(businessId?: string) {
       const result = await syncPendingChanges(businessId);
       setLastMessage(result.message);
       setPending(result.pending);
+    } catch (error) {
+      setLastMessage(error instanceof Error ? error.message : "Sync could not complete");
+      await refreshCount();
     } finally {
       setSyncing(false);
     }
-  }, [businessId]);
+  }, [businessId, refreshCount]);
 
   useEffect(() => {
     const updateOnline = () => {
-      setOnline(navigator.onLine);
-      if (navigator.onLine) void syncNow();
+      const connected = navigator.onLine;
+      setOnline(connected);
+      if (connected) void syncNow();
+    };
+    const onVisible = () => {
+      if (document.visibilityState === "visible") {
+        setOnline(navigator.onLine);
+        void refreshCount();
+        if (navigator.onLine) void syncNow();
+      }
     };
     setOnline(navigator.onLine);
     void refreshCount();
     window.addEventListener("online", updateOnline);
     window.addEventListener("offline", updateOnline);
-    const interval = window.setInterval(() => {
-      void refreshCount();
-      if (navigator.onLine) void syncNow();
-    }, 5000);
-
+    document.addEventListener("visibilitychange", onVisible);
     if (navigator.onLine) void syncNow();
-
     return () => {
       window.removeEventListener("online", updateOnline);
       window.removeEventListener("offline", updateOnline);
-      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }, [refreshCount, syncNow]);
 
