@@ -31,7 +31,7 @@ export default function StaffPage(){
   setBusinessId(id);
   if(!id){setError("No business is selected on this device. Complete business setup first.");return;}
   const supabase=createClient();
-  const {data:members,error:memberError}=await supabase.from("business_members").select("id,user_id,role,is_active,created_at").eq("business_id",id).order("created_at",{ascending:true});
+  const {data:members,error:memberError}=await supabase.rpc("list_business_members",{p_business_id:id});
   if(memberError)throw memberError;
   setStaff((members||[]) as StaffRow[]);
   const {data:audit,error:auditError}=await supabase.from("audit_logs").select("id,action,entity_type,entity_id,created_at,actor_id").eq("business_id",id).order("created_at",{ascending:false}).limit(100);
