@@ -21,6 +21,7 @@ import {
   Receipt,
   ScanBarcode,
   Settings,
+  ShieldCheck,
   ShoppingBag,
   ShoppingCart,
   Truck,
