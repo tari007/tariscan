@@ -20,7 +20,7 @@ as $$
  select exists(select 1 from public.businesses b where b.id=p_business_id and b.owner_id=auth.uid())
  or exists(select 1 from public.business_members m where m.business_id=p_business_id and m.user_id=auth.uid() and m.is_active and (
  m.role='owner'
- or (m.role='manager' and p_permission in ('sales.read','sales.create','sales.refund','products.read','products.write','inventory.adjust','customers.manage','suppliers.manage','purchases.manage','expenses.manage','reports.read','staff.read','staff.manage','audit.read'))
+ or (m.role='manager' and p_permission in ('sales.read','sales.create','sales.refund','products.read','products.write','inventory.adjust','customers.manage','suppliers.manage','purchases.manage','expenses.manage','reports.read','staff.read','audit.read'))
  or (m.role='supervisor' and p_permission in ('sales.read','sales.create','sales.refund','products.read','products.write','inventory.adjust','customers.manage','suppliers.manage','purchases.manage','expenses.manage','reports.read','staff.read','audit.read'))
  or (m.role='cashier' and p_permission in ('sales.read','sales.create','products.read','customers.manage'))
  or (m.role='stock_clerk' and p_permission in ('products.read','products.write','inventory.adjust','suppliers.manage','purchases.manage'))
