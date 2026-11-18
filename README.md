@@ -38,7 +38,7 @@ The database is the enforcement layer for cloud permissions. The offline browser
 ## Supabase setup
 
 1. Create a Supabase project.
-2. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to your local `.env.local` and Vercel environment variables.
+2. Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` to your local `.env.local` and Vercel environment variables.
 3. Run the SQL migrations in the order listed below.
 4. Configure Supabase Authentication site and redirect URLs for your local and deployed domains.
 5. Redeploy after adding or changing environment variables.
@@ -61,7 +61,7 @@ Run each file once in the Supabase SQL Editor, in numerical order:
 
 The staff migration assumes the earlier business and operational tables already exist. Existing owners are backfilled into the membership table. New business owners are added automatically by a database trigger.
 
-Never expose a Supabase service-role key in browser code or a `NEXT_PUBLIC_` variable. The application uses the publishable/anon key with Row Level Security.
+Never expose a Supabase service-role key in browser code or a `NEXT_PUBLIC_` variable. The application uses the Supabase publishable key with Row Level Security. The older anon key variable remains supported for backwards compatibility.
 
 ## Run locally
 
@@ -136,7 +136,7 @@ A project license has not yet been selected. All rights remain with the project 
 
 ### Deployment readiness checklist
 
-1. Configure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in Vercel.
+1. Configure `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in Vercel.
 2. Run all eleven Supabase migrations in the order listed above.
 3. Set Supabase Authentication site URL and redirect allow-list for the production domain.
 4. Register the production domain in Vercel and deploy the `main` branch.
