@@ -136,6 +136,7 @@ function Sidebar() {
         const Icon = item.icon;
 
         if (item.label === "Point of Sale") { return <Link key={item.label} href="/checkout" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
+        if (item.label === "Sales & Transactions") { return <Link key={item.label} href="/sales" className="nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Products & Inventory") {
           return <Link key={item.label} href="/products" className="nav-item"><Icon /><span>{item.label}</span></Link>;
         }
@@ -438,7 +439,7 @@ function QuickActions() {
     { title: "New Sale", note: "Start a transaction", icon: ShoppingCart, href: "/checkout" },
     { title: "Add Product", note: "Register an item", icon: Plus, href: "/products" },
     { title: "Scan Barcode", note: "Identify a product", icon: ScanBarcode, href: "/products" },
-    { title: "View Reports", note: "Analyse performance", icon: ClipboardList, href: "/" }
+    { title: "Sales History", note: "Find past transactions", icon: ClipboardList, href: "/sales" }
   ];
 
   return (
@@ -482,6 +483,7 @@ function MobileNavigation() {
         const Icon = item.icon;
 
         if (item.label === "Sell") { return <Link key={item.label} href="/checkout" className="mobile-nav-item"><Icon /><span>{item.label}</span></Link>; }
+        if (item.label === "Sales") { return <Link key={item.label} href="/sales" className="mobile-nav-item"><Icon /><span>{item.label}</span></Link>; }
         if (item.label === "Products") {
           return <Link key={item.label} href="/products" className="mobile-nav-item"><Icon /><span>{item.label}</span></Link>;
         }
