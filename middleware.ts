@@ -1,10 +1,32 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+function hasValidSupabaseConfig() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return NextResponse.next({ request });
+  if (!url || !key || key.startsWith("YOUR_")) return false;
+  try {
+    const parsed = new URL(url);
+    return (parsed.protocol === "https:" || parsed.hostname === "localhost") &&
+      Boolean(parsed.hostname) && !parsed.hostname.includes("YOUR_PROJECT_ID");
+  } catch {
+    return false;
+  }
+}
+
+export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+
+  if (!hasValidSupabaseConfig()) {
+    if (path === "/configuration-required") return NextResponse.next();
+    const setupUrl = request.nextUrl.clone();
+    setupUrl.pathname = "/configuration-required";
+    setupUrl.search = "";
+    return NextResponse.redirect(setupUrl);
+  }
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
   let response = NextResponse.next({ request });
   const supabase = createServerClient(url, key, {
@@ -18,9 +40,15 @@ export async function middleware(request: NextRequest) {
     }
   });
 
-  const { data: { user } } = await supabase.auth.getUser();
-  const path = request.nextUrl.pathname;
-  const isPublicRoute = path === "/login" || path === "/register" || path.startsWith("/auth/");
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    loginUrl.searchParams.set("next", path);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  const isPublicRoute = path === "/login" || path === "/register" || path.startsWith("/auth/") || path === "/configuration-required";
   if (!user && !isPublicRoute) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
