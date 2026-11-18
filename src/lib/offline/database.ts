@@ -42,6 +42,10 @@ export interface LocalSale {
   sold_at: string;
   created_at: string;
   sync_state: SyncState;
+  status?: "completed" | "refunded";
+  refunded_at?: string;
+  refund_reason?: string;
+  refunded_amount?: number;
 }
 
 export interface SyncQueueItem {
