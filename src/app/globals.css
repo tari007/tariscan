@@ -1016,3 +1016,37 @@ a {
 @media(max-width:850px){.checkout-page{padding:22px 16px 95px}.checkout-grid{grid-template-columns:1fr}.checkout-header h1{font-size:22px}}
 @media(max-width:520px){.checkout-panel{padding:15px}.checkout-results{grid-template-columns:1fr}.checkout-fields{grid-template-columns:1fr}.checkout-header{flex-direction:column}.checkout-search input{font-size:12px}.checkout-search button{padding:10px}}
 @media print{body *{visibility:hidden!important}.checkout-receipt,.checkout-receipt *{visibility:visible!important}.checkout-receipt{display:block!important;position:absolute;inset:0;width:100%;background:#fff}.receipt-paper{max-width:380px;margin:0 auto;padding:12px}.no-print{display:none!important}}
+
+
+/* Build 7: sales history and transaction management */
+.sales-page{max-width:1400px;margin:0 auto;padding:28px 28px 70px;color:#172033}
+.sales-header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:22px}
+.sales-header h1{font-size:26px;letter-spacing:-.8px;margin:0}
+.sales-filters{display:grid;grid-template-columns:minmax(200px,1.5fr) repeat(3,minmax(130px,1fr));gap:10px;margin-bottom:16px}
+.sales-filters input,.sales-filters select,.refund-reason{width:100%;border:1px solid #dfe4ed;border-radius:8px;background:#fff;padding:11px 12px;color:#172033;font-size:12px}
+.sales-table-panel{background:#fff;border:1px solid #e8ebf2;border-radius:13px;overflow:hidden}
+.sales-table{width:100%;border-collapse:collapse;min-width:760px;text-align:left}
+.sales-table th{font-size:10px;color:#778198;background:#fafbfe;padding:13px 14px;border-bottom:1px solid #e8ebf2}
+.sales-table td{font-size:11px;padding:14px;border-bottom:1px solid #eff1f5;vertical-align:middle}
+.sales-table tr:last-child td{border-bottom:0}
+.sales-reference{font-weight:800;color:#3157d5}
+.sales-secondary{font-size:10px;color:#778198;margin-top:4px}
+.sales-status{display:inline-block;padding:5px 8px;border-radius:20px;font-size:9px;font-weight:800;background:#e8f7ef;color:#16734f}
+.sales-status.refunded{background:#fff0f0;color:#b43d3d}
+.sales-actions{display:flex;gap:7px;flex-wrap:wrap}
+.sales-action{border:1px solid #dfe4ed;border-radius:7px;background:#fff;padding:7px 9px;font-size:10px;font-weight:700;color:#46516a}
+.sales-action.danger{color:#b43d3d;border-color:#f0cccc}
+.sales-empty{padding:40px 20px;text-align:center;color:#778198;font-size:12px}
+.sales-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.sales-summary-card{background:#fff;border:1px solid #e8ebf2;border-radius:11px;padding:15px}
+.sales-summary-card span{display:block;color:#778198;font-size:10px}
+.sales-summary-card strong{display:block;font-size:19px;margin-top:7px}
+.refund-box{background:#fff8f8;border:1px solid #f1dada;border-radius:10px;padding:14px;margin:14px}
+.refund-box p{font-size:11px;color:#7b4c4c;line-height:1.5}
+.refund-controls{display:flex;gap:8px;margin-top:9px}
+.refund-controls button{border:0;border-radius:7px;padding:10px 13px;font-size:11px;font-weight:800}
+.refund-confirm{background:#b43d3d;color:#fff}.refund-cancel{background:#edf0f5;color:#46516a}
+.sales-receipt{display:none}
+@media(max-width:800px){.sales-page{padding:22px 15px 95px}.sales-header{flex-direction:column}.sales-filters{grid-template-columns:1fr 1fr}.sales-filters input:first-child{grid-column:1/-1}.sales-summary{gap:8px}.sales-summary-card{padding:12px}.sales-summary-card strong{font-size:16px}}
+@media(max-width:430px){.sales-filters{grid-template-columns:1fr}.sales-filters input:first-child{grid-column:auto}.sales-summary{grid-template-columns:1fr 1fr}.sales-summary-card:last-child{grid-column:1/-1}}
+@media print{body *{visibility:hidden!important}.sales-receipt,.sales-receipt *{visibility:visible!important}.sales-receipt{display:block!important;position:absolute;inset:0;background:#fff;width:100%}.receipt-paper{margin:0 auto;padding:12px}}
