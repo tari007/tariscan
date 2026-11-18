@@ -162,3 +162,11 @@ A green CI build does not verify live Supabase policies, authentication redirect
 ### Production acceptance remains required
 
 Before real business use, complete the deployment checklist above against the actual Supabase and Vercel projects. Confirm authentication, all eleven migrations, owner and staff permissions, offline queue recovery, backup/restore and HTTPS camera access. The current GitHub CI workflow verifies unit tests, TypeScript and a Next.js production build. It does not run browser end-to-end tests or validate live cloud configuration.
+
+
+## Build 15: authentication redirect hardening
+
+- Added a shared internal-path validator for post-login navigation.
+- Login now rejects absolute and protocol-relative external destinations and falls back to the correct dashboard or business setup route.
+- Added automated tests for normal internal paths, external URLs, protocol-relative URLs, backslash redirect attempts and invalid values.
+- These checks reduce open-redirect risk in the login flow. They do not replace Supabase authentication, RLS, deployment security review or live acceptance testing.
