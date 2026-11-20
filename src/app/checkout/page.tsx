@@ -6,7 +6,6 @@ import { ArrowLeft, Minus, Plus, Search, ShoppingCart, WifiOff } from "lucide-re
 import { localDb, type LocalProduct, type LocalSale } from "@/lib/offline/database";
 import { completeLocalSale } from "@/lib/offline/repository";
 import { syncPendingChanges } from "@/lib/offline/sync";
-import { syncPendingChanges } from "@/lib/offline/sync";
 
 type CartLine = { product: LocalProduct; quantity: number };
 const money = (value: number) => new Intl.NumberFormat("en-NG", {
