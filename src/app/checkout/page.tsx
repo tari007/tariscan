@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Minus, Plus, Search, ShoppingCart, WifiOff } from "lucide-react";
 import { localDb, type LocalProduct, type LocalSale } from "@/lib/offline/database";
 import { completeLocalSale } from "@/lib/offline/repository";
+import { syncPendingChanges } from "@/lib/offline/sync";
 
 type CartLine = { product: LocalProduct; quantity: number };
 const money = (value: number) => new Intl.NumberFormat("en-NG", {
@@ -132,7 +133,18 @@ export default function CheckoutPage() {
       setCompletedSale(sale);
       setCart([]); setSearch(""); setDiscount("0"); setTendered("");
       await refresh(businessId);
-      setNotice(online ? "Sale saved on this device and queued for cloud synchronisation." : "Sale completed offline. It is saved on this device and will sync when connected.");
+      if (online && navigator.onLine) {
+        const syncResult = await syncPendingChanges(businessId);
+        if (syncResult.failed > 0) {
+          setNotice(`Sale saved on this device. Cloud sync needs attention: ${syncResult.pending} change(s) pending. ${syncResult.message}.`);
+        } else if (syncResult.pending === 0) {
+          setNotice("Sale completed and all local changes synchronised with the cloud.");
+        } else {
+          setNotice(`Sale saved. ${syncResult.pending} change(s) are still waiting to synchronise.`);
+        }
+      } else {
+        setNotice("Sale completed offline. It is saved on this device and will sync when connected.");
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unable to complete this sale.");
     } finally {
