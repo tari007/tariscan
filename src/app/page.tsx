@@ -253,8 +253,8 @@ function Topbar() {
     };
   }, []);
 
-  const roleLabel = account.role.replace(/_/g, " ").replace(/\\b\\w/g, character => character.toUpperCase());
-  const initials = account.name.split(/[\\s._-]+/).filter(Boolean).slice(0, 2).map(part => part[0]?.toUpperCase()).join("") || "TS";
+  const roleLabel = account.role.replace(/_/g, " ").replace(/\b\w/g, character => character.toUpperCase());
+  const initials = account.name.split(/[\s._-]+/).filter(Boolean).slice(0, 2).map(part => part[0]?.toUpperCase()).join("") || "TS";
 
   async function handleSignOut() {
     setSigningOut(true);
