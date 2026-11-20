@@ -12,6 +12,8 @@ export function OfflineSyncStatus() {
   useEffect(() => {
     if (!isSupabaseConfigured()) return;
     let active = true;
+    const savedBusinessId = localStorage.getItem("tariscan_business_id");
+    if (savedBusinessId) setBusinessId(savedBusinessId);
     const loadBusiness = async () => {
       try {
         const supabase = createClient();
@@ -19,7 +21,7 @@ export function OfflineSyncStatus() {
         if (!user) return;
         const { data } = await supabase.from("businesses")
           .select("id").eq("owner_id", user.id).order("created_at", { ascending: true }).limit(1).maybeSingle();
-        if (active && data?.id) setBusinessId(data.id);
+        if (active && !savedBusinessId && data?.id) setBusinessId(data.id);
       } catch {
         // Keep the status display available when cloud configuration is incomplete.
       }
