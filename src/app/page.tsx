@@ -1,6 +1,9 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import { OfflineSyncStatus } from "@/components/offline-sync-status";
 import {
   Activity,
@@ -16,12 +19,14 @@ import {
   ClipboardList,
   CreditCard,
   LayoutDashboard,
+  LogOut,
   Package,
   Plus,
   Receipt,
   ScanBarcode,
   Settings,
   ShieldCheck,
+  UserRound,
   ShoppingBag,
   ShoppingCart,
   Truck,
@@ -180,6 +185,89 @@ function Sidebar() {
 }
 
 function Topbar() {
+  const router = useRouter();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const [account, setAccount] = useState({
+    name: "Loading account…",
+    email: "",
+    role: "Checking access",
+    business: "TariScan business"
+  });
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let active = true;
+    async function loadAccount() {
+      if (!isSupabaseConfigured()) {
+        if (active) setAccount(current => ({ ...current, name: "Account unavailable", role: "Not connected" }));
+        return;
+      }
+      try {
+        const supabase = createClient();
+        const { data: { user }, error } = await supabase.auth.getUser();
+        if (error || !user) {
+          if (active) setAccount(current => ({ ...current, name: "Not signed in", role: "No active session" }));
+          return;
+        }
+        const metadata = user.user_metadata ?? {};
+        const displayName = String(metadata.full_name || metadata.name || metadata.display_name || "").trim();
+        const businessId = localStorage.getItem("tariscan_business_id") || "";
+        const businessName = localStorage.getItem("tariscan_business_name") || "TariScan business";
+        let role = "Member";
+        if (businessId) {
+          const { data: members, error: memberError } = await supabase.rpc("list_business_members", { p_business_id: businessId });
+          if (!memberError && Array.isArray(members)) {
+            const membership = members.find((member: { user_id?: string; is_active?: boolean; role?: string }) =>
+              member.user_id === user.id && member.is_active !== false
+            );
+            if (membership?.role) role = membership.role;
+          }
+        }
+        if (active) setAccount({
+          name: displayName || user.email?.split("@")[0] || "TariScan user",
+          email: user.email || "",
+          role,
+          business: businessName
+        });
+      } catch {
+        if (active) setAccount(current => ({ ...current, name: "Account details unavailable" }));
+      }
+    }
+    void loadAccount();
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    function closeOnOutsideClick(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) setMenuOpen(false);
+    }
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setMenuOpen(false);
+    }
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
+
+  const roleLabel = account.role.replace(/_/g, " ").replace(/\\b\\w/g, character => character.toUpperCase());
+  const initials = account.name.split(/[\\s._-]+/).filter(Boolean).slice(0, 2).map(part => part[0]?.toUpperCase()).join("") || "TS";
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    try {
+      const { error } = await createClient().auth.signOut();
+      if (error) throw error;
+      router.replace("/login");
+      router.refresh();
+    } catch {
+      setSigningOut(false);
+    }
+  }
+
   return (
     <header className="topbar">
       <div className="mobile-brand">
@@ -190,28 +278,56 @@ function Topbar() {
       <div className="topbar-left">
         <div>
           <div className="page-heading">Dashboard</div>
-          <div className="page-subheading">
-            Your business at a glance
-          </div>
+          <div className="page-subheading">Your business at a glance</div>
         </div>
       </div>
 
       <div className="topbar-right">
-        <button
-          className="icon-button"
-          type="button"
-          aria-label="Notifications"
-        >
+        <button className="icon-button" type="button" aria-label="Notifications">
           <Bell size={17} />
         </button>
 
-        <div className="profile">
-          <div className="avatar">AD</div>
-          <div className="profile-details">
-            <div className="profile-name">Admin User</div>
-            <div className="profile-role">Business Owner</div>
-          </div>
-          <ChevronDown size={14} color="#8992a5" />
+        <div className="profile-menu" ref={menuRef}>
+          <button
+            className="profile profile-trigger"
+            type="button"
+            aria-label="Open account menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(open => !open)}
+          >
+            <div className="avatar">{initials}</div>
+            <span className="profile-details">
+              <span className="profile-name">{account.name}</span>
+              <span className="profile-role">{roleLabel}</span>
+            </span>
+            <ChevronDown size={14} color="#8992a5" />
+          </button>
+
+          {menuOpen && (
+            <div className="profile-dropdown" role="menu">
+              <div className="profile-dropdown-heading">
+                <div className="profile-dropdown-avatar">{initials}</div>
+                <div className="profile-dropdown-identity">
+                  <strong>{account.name}</strong>
+                  <span>{account.email || "Email not available"}</span>
+                </div>
+              </div>
+              <div className="profile-dropdown-divider" />
+              <div className="profile-dropdown-detail">
+                <span>Business</span>
+                <strong>{account.business}</strong>
+              </div>
+              <div className="profile-dropdown-detail">
+                <span>Business role</span>
+                <strong className="profile-role-value"><ShieldCheck size={14} />{roleLabel}</strong>
+              </div>
+              <div className="profile-dropdown-divider" />
+              <div className="profile-dropdown-account"><UserRound size={15} /> Signed-in account</div>
+              <button className="profile-signout" type="button" role="menuitem" onClick={() => void handleSignOut()} disabled={signingOut}>
+                <LogOut size={15} />{signingOut ? "Signing out…" : "Sign out"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
