@@ -1184,3 +1184,17 @@ a {
   font-size: 11px;
   font-weight: 700;
 }
+
+
+/* Cloud sync status is also shown in the mobile dashboard content. */
+.dashboard-sync-panel {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.dashboard-sync-panel .offline-status-wrap { gap: 6px; }
+.dashboard-sync-panel .offline-indicator { color: #47536b; font-size: 12px; }
+.dashboard-sync-panel .offline-sync-message { color: #68758d; font-size: 11px; line-height: 1.45; }
+.dashboard-sync-panel .sync-now-button { background: #3157d5; border-color: #3157d5; color: #ffffff; font-size: 11px; padding: 7px 11px; }
