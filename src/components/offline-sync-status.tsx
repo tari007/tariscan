@@ -35,9 +35,10 @@ export function OfflineSyncStatus() {
         <span>{!online ? "Offline mode" : syncing ? "Synchronising" : pending > 0 ? `${pending} changes pending` : "Connected"}</span>
         {syncing && <RefreshCw size={12} className="sync-spin" />}
       </div>
+      {lastMessage && <span className="sync-message">{lastMessage}</span>}
       {online && pending > 0 && (
         <button type="button" className="sync-now-button" onClick={() => void syncNow()} disabled={syncing}>
-          Sync now
+          {syncing ? "Synchronising…" : "Sync now"}
         </button>
       )}
     </div>
