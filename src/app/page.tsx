@@ -175,9 +175,6 @@ function Sidebar() {
         );
       })}
 
-      <div className="sidebar-bottom">
-        <OfflineSyncStatus />
-      </div>
     </aside>
   );
 }
@@ -525,6 +522,7 @@ export default function DashboardPage() {
         <Topbar />
 
         <div className="dashboard-content">
+          <div className="dashboard-sync-panel"><OfflineSyncStatus /></div>
           <div className="dashboard-demo-notice"><AlertTriangle size={16} /><span><strong>Preview figures:</strong> The dashboard charts, sample transactions, stock alerts and headline totals below are illustrative placeholders. They are not live business records. Use the Products, Sales and Reports pages for records currently stored on this device.</span></div>
           <div className="welcome-row">
             <div>
@@ -649,11 +647,11 @@ export default function DashboardPage() {
                       Cloud synchronisation
                     </div>
                     <div className="activity-time">
-                      Planned integration
+                      Live cloud sync status shown above
                     </div>
                   </div>
-                  <span className="stock-badge stock-low">
-                    Pending
+                  <span className="stock-badge stock-good">
+                    Enabled
                   </span>
                 </div>
 
@@ -678,11 +676,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="demo-notice">
-            <strong>Development preview:</strong> The figures and
-            transactions shown here are sample records for interface
-            demonstration. Live business data, authentication,
-            Supabase storage and offline synchronisation will be
-            connected in subsequent development builds.
+            <strong>Dashboard preview:</strong> The charts, headline totals and sample transactions on this page are illustrative. Use Products, Sales and Reports to view your actual business records. Cloud synchronisation status is displayed above.
           </div>
         </div>
       </div>
