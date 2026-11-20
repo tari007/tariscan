@@ -523,7 +523,8 @@ export default function DashboardPage() {
 
         <div className="dashboard-content">
           <div className="dashboard-sync-panel"><OfflineSyncStatus /></div>
-          <div className="dashboard-demo-notice"><AlertTriangle size={16} /><span><strong>Preview figures:</strong> The dashboard charts, sample transactions, stock alerts and headline totals below are illustrative placeholders. They are not live business records. Use the Products, Sales and Reports pages for records currently stored on this device.</span></div>
+          <div className="dashboard-sync-panel"><OfflineSyncStatus /></div>
+          <div className="dashboard-demo-notice"><AlertTriangle size={16} /><span><strong>Dashboard preview:</strong> Charts, sample transactions, stock alerts and headline totals are illustrative. Use Products, Sales and Reports to view business records saved on this device.</span></div>
           <div className="welcome-row">
             <div>
               <div className="welcome-title">
