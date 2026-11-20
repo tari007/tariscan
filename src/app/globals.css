@@ -1154,3 +1154,33 @@ a {
 .dashboard-demo-notice{display:flex;align-items:flex-start;gap:10px;margin:0 0 18px;padding:12px 14px;border:1px solid #f0d9a5;background:#fffaf0;color:#805b13;border-radius:10px;font-size:11px;line-height:1.6}
 .dashboard-demo-notice svg{flex:0 0 auto;margin-top:1px}
 .dashboard-demo-notice strong{font-weight:800}
+
+
+/* Mobile-visible cloud synchronisation panel */
+.dashboard-sync-panel {
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.dashboard-sync-panel .offline-status-wrap { gap: 7px; }
+.dashboard-sync-panel .offline-indicator {
+  color: #33415f;
+  font-size: 12px;
+  font-weight: 700;
+}
+.dashboard-sync-panel .sync-message {
+  color: #71809b;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.dashboard-sync-panel .sync-now-button {
+  border: 0;
+  background: #3157d5;
+  color: #fff;
+  border-radius: 7px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
